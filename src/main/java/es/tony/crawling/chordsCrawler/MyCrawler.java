@@ -1,5 +1,6 @@
 package es.tony.crawling.chordsCrawler;
 
+
 import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -39,54 +40,45 @@ public class MyCrawler extends WebCrawler {
 	public boolean shouldVisit(WebURL url) {
 		String href = url.getURL().toLowerCase();
 		return !FILTERS.matcher(href).matches()
-				&& href.startsWith("******");
+				&& href.startsWith("*****");
 	}
 
 	@Override
 	public void visit(Page page) {
 		String url = page.getWebURL().getURL();
 		System.out.println(url);
-		JSONObject obj = null;
 
 		if (page.getParseData() instanceof HtmlParseData) {
 			HtmlParseData htmlParseData = (HtmlParseData) page.getParseData();
 			String html = htmlParseData.getHtml();
 
-			Pattern p = Pattern.compile(".*?<u>(.*?)</u>.*?", Pattern.DOTALL);
-			Pattern p2 = Pattern
+			Pattern p_chords = Pattern.compile(".*?<u>(.*?)</u>.*?", Pattern.DOTALL);
+			Pattern p_data = Pattern
 					.compile(
 							".*?strKey = \"(.*?)\".*?artist = \"(.*?)\".*?title = \"(.*?)\".*?",
 							Pattern.DOTALL);
 
-			Matcher m = p.matcher(html);
-			Matcher m2 = p2.matcher(html);
+			Matcher m_chords = p_chords.matcher(html);
+			Matcher m_data = p_data.matcher(html);
 
-			obj = new JSONObject();
+			JSONObject songData = new JSONObject();
 			JSONArray chords = new JSONArray();
-			for (int i = 0; i < 1; i++) {
-				if (m.matches()) {
-					m = p.matcher(html);
-					while (m.find()) {
-						chords.add(m.group(1));
-					}
-				} else
-					System.out.println("No match");
+			
+			if (m_data.matches()) {
+				songData.put("key", m_data.group(1));
+				songData.put("group", m_data.group(2));
+				songData.put("song", m_data.group(3));
+				
+				while (m_chords.find()) {
+					chords.add(m_chords.group(1));
+				}
+				
+				songData.put("chords", chords);
+				System.out.println(songData);
+				ChordDao.insertar(songData.toString());
+			} else {
+				System.out.println("No matches");
 			}
-			for (int i = 0; i < 1; i++) {
-				if (m2.matches()) {
-					m2 = p2.matcher(html);
-					while (m2.find()) {
-						obj.put("key", m2.group(1));
-						obj.put("group", m2.group(2));
-						obj.put("song", m2.group(3));
-					}
-				} else
-					System.out.println("No matches 2");
-			}
-			obj.put("chords", chords);
-			System.out.println(obj);
-			ChordDao.insertar(obj.toString());
-
 		}
 	}
 }

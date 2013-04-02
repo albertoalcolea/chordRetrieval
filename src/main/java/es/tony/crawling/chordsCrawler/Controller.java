@@ -1,7 +1,8 @@
 package es.tony.crawling.chordsCrawler;
 
-import org.apache.log4j.BasicConfigurator;
+
 import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 import org.jongo.Jongo;
 
 import com.mongodb.DB;
@@ -16,10 +17,9 @@ import es.tony.crawling.dao.ChordDao;
 
 public class Controller {
 
-	 private final static Logger log = Logger.getLogger(Controller.class);
+	//private final static Logger log = Logger.getLogger(Controller.class);
 
 	public static void main(String[] args) throws Exception {
-		 BasicConfigurator.configure();
 		DB db = new Mongo().getDB("chordsDB");
 		Jongo jongo = new Jongo(db);
 		ChordDao chordDao = new ChordDao(jongo);
@@ -39,7 +39,7 @@ public class Controller {
 		CrawlController controller = new CrawlController(config, pageFetcher,
 				robotstxtServer);
 
-		controller.addSeed("****");
+		controller.addSeed("*****");
 
 		controller.start(MyCrawler.class, numberOfCrawlers);
 	}
