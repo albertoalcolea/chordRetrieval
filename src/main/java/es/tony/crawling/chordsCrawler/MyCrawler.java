@@ -53,22 +53,27 @@ public class MyCrawler extends WebCrawler {
 			HtmlParseData htmlParseData = (HtmlParseData) page.getParseData();
 			String html = htmlParseData.getHtml();
 
-			Pattern p_chords = Pattern.compile(".*?<u>(.*?)</u>.*?", Pattern.DOTALL);
 			Pattern p_data = Pattern
 					.compile(
-							".*?strKey = \"(.*?)\".*?artist = \"(.*?)\".*?title = \"(.*?)\".*?",
+							".*?strKey = \"(.+?)\"" +
+							".*?artist = \"(.+?)\"" +
+							".*?title = \"(.+?)\"" +
+							".*?<pre.*?>(.+?)</pre>.*?", 
 							Pattern.DOTALL);
 
-			Matcher m_chords = p_chords.matcher(html);
 			Matcher m_data = p_data.matcher(html);
 
-			JSONObject songData = new JSONObject();
-			JSONArray chords = new JSONArray();
-			
 			if (m_data.matches()) {
+				JSONObject songData = new JSONObject();
+				JSONArray chords = new JSONArray();
+				
 				songData.put("key", m_data.group(1));
 				songData.put("group", m_data.group(2));
 				songData.put("song", m_data.group(3));
+
+				// Only looking for into <pre> </pre>
+				Pattern p_chords = Pattern.compile("<u>(.+?)</u>", Pattern.DOTALL);
+				Matcher m_chords = p_chords.matcher(m_data.group(4));
 				
 				while (m_chords.find()) {
 					chords.add(m_chords.group(1));

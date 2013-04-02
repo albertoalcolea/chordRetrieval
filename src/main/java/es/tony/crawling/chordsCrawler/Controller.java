@@ -1,8 +1,6 @@
 package es.tony.crawling.chordsCrawler;
 
 
-import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
 import org.jongo.Jongo;
 
 import com.mongodb.DB;
