@@ -22,7 +22,8 @@ public class MyCrawler extends WebCrawler {
 			.compile(".*(\\.(css|js|bmp|gif|jpe?g"
 					+ "|png|tiff?|mid|mp2|mp3|mp4"
 					+ "|wav|avi|mov|mpeg|ram|m4v|pdf"
-					+ "|rm|smil|wmv|swf|wma|zip|rar|gz))$");
+					+ "|rm|smil|wmv|swf|wma|zip|rar|gz)"
+					+ "|/key-[0-9][0-1]?)$");
 
 	private static File storageFolder;
 	private static String[] crawlDomains;
