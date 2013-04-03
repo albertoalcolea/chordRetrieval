@@ -3,8 +3,7 @@ package es.tony.crawling.chordsCrawler;
 
 import org.jongo.Jongo;
 
-import com.mongodb.DB;
-import com.mongodb.Mongo;
+
 
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.crawler.CrawlController;
@@ -18,17 +17,16 @@ public class Controller {
 	//private final static Logger log = Logger.getLogger(Controller.class);
 
 	public static void main(String[] args) throws Exception {
-		DB db = new Mongo().getDB("chordsDB");
-		Jongo jongo = new Jongo(db);
-		ChordDao chordDao = new ChordDao(jongo);
+		ChordDao.inicializar();
+		
 		String crawlStorageFolder = "data";
-		int numberOfCrawlers = 1;
+		int numberOfCrawlers = 8; //1
 
 		CrawlConfig config = new CrawlConfig();
 		config.setCrawlStorageFolder(crawlStorageFolder);
 		config.setPolitenessDelay(2000);
-		config.setMaxDepthOfCrawling(2);
-		config.setMaxPagesToFetch(1000);
+		config.setMaxDepthOfCrawling(-1); //2
+		config.setMaxPagesToFetch(-1);  //1000
 
 		PageFetcher pageFetcher = new PageFetcher(config);
 		RobotstxtConfig robotstxtConfig = new RobotstxtConfig();
@@ -37,7 +35,13 @@ public class Controller {
 		CrawlController controller = new CrawlController(config, pageFetcher,
 				robotstxtServer);
 
-		controller.addSeed("*****");
+		// Digits
+		for (char c='0'; c<='9'; c++)
+			controller.addSeed("*****/browse/" + c);
+		// Alphabetics
+		for (char c='a'; c<='z'; c++)
+			controller.addSeed("*****/browse/" + c);
+		
 
 		controller.start(MyCrawler.class, numberOfCrawlers);
 	}
