@@ -52,7 +52,7 @@ public class MyCrawler extends WebCrawler {
 	public boolean shouldVisit(WebURL url) {
 		String href = url.getURL().toLowerCase();
 		return !FILTERS.matcher(href).matches()
-				&& href.startsWith("http://www.e-chords.com/chords");
+				&& href.startsWith("*****/chords");
 	}
 
 	@Override
