@@ -37,10 +37,10 @@ public class Controller {
 
 		// Digits
 		for (char c='0'; c<='9'; c++)
-			controller.addSeed("*****/browse/" + c);
+			controller.addSeed("http://www.e-chords.com/browse/" + c);
 		// Alphabetics
 		for (char c='a'; c<='z'; c++)
-			controller.addSeed("*****/browse/" + c);
+			controller.addSeed("http://www.e-chords.com/browse/" + c);
 		
 
 		controller.start(MyCrawler.class, numberOfCrawlers);
